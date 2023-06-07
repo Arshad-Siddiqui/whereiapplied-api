@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -9,7 +10,16 @@ import (
 )
 
 func listApplications(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello World"))
+	applications := database.GetApplications()
+	w.Header().Set("Content-Type", "application/json")
+	jsonData, err := json.Marshal(applications)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		log.Fatal(err)
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonData)
 }
 
 func main() {
@@ -21,11 +31,11 @@ func main() {
 	database.Connect()
 	mux := http.NewServeMux()
 	mux.HandleFunc("/applications", listApplications)
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("Hello, World!"))
+	})
 
-	server := &http.Server{
-		Addr:    ":8080",
-		Handler: mux,
-	}
 	log.Println("Listening on port 8080")
-	server.ListenAndServe()
+	http.ListenAndServe(":8080", mux)
 }
