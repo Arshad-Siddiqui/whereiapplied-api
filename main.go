@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 
@@ -15,7 +14,11 @@ func init() {
 		panic(err)
 	}
 
-	database.Connect()
+	err = database.Connect()
+	if err != nil {
+		panic(err)
+	}
+
 }
 
 func main() {
@@ -31,14 +34,13 @@ func main() {
 }
 
 func listApplications(w http.ResponseWriter, r *http.Request) {
-	applications := database.GetApplications()
 	w.Header().Set("Content-Type", "application/json")
-	jsonData, err := json.Marshal(applications)
+	applications, err := database.GetApplications()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		log.Fatal(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
 	}
-
+	w.Write(applications)
 	w.WriteHeader(http.StatusOK)
-	w.Write(jsonData)
 }

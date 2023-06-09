@@ -2,8 +2,7 @@ package database
 
 import (
 	"context"
-	"fmt"
-	"log"
+	"encoding/json"
 	"os"
 	"time"
 
@@ -14,42 +13,38 @@ import (
 
 var client *mongo.Client
 
-func Connect() {
+func Connect() error {
 	ctx := context.TODO()
 	var err error
 	client, err = mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("MONGO_URI")))
 	if err != nil {
-		panic(err)
+		return err
 	}
-	defer func() {
-		if err = client.Disconnect(ctx); err != nil {
-			panic(err)
-		}
-	}()
+	return nil
 }
 
-func GetApplications() []bson.M {
-	var results []bson.M
-
+func GetApplications() ([]byte, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-
-	collection := client.Database("whereiapplied").Collection("applications")
-	cursor, err := collection.Find(ctx, bson.M{})
+	cursor, err := client.Database("whereiapplied").Collection("applications").Find(ctx, bson.M{})
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-
 	defer cursor.Close(ctx)
+	var results []bson.M
+
 	for cursor.Next(ctx) {
 		var result bson.M
 		err := cursor.Decode(&result)
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 		results = append(results, result)
-		fmt.Println(result)
 	}
-	log.Println(results)
-	return results
+	jsonData, err := json.Marshal(results)
+	if err != nil {
+		return nil, err
+	}
+
+	return jsonData, nil
 }
