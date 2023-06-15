@@ -20,37 +20,31 @@ func TestConnect(t *testing.T) {
 	}
 }
 func TestAddApplication(t *testing.T) {
-	// Load the .env file
-	err := godotenv.Load("../.env.test")
-	if err != nil {
-		t.Error("Error loading .env file")
-	}
-
-	// Connect to the database
-	err = Connect()
-	if err != nil {
-		t.Error("Error connecting to the database")
-	}
-	err = AddApplication("Google", "https://google.com")
+	setup()
+	err := AddApplication("Google", "https://google.com")
 	if err != nil {
 		t.Error(err)
 	}
 }
 
 func TestGetApplications(t *testing.T) {
+	setup()
+	_, err := GetApplications()
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func setup() {
 	// Load the .env file
 	err := godotenv.Load("../.env.test")
 	if err != nil {
-		t.Error("Error loading .env file")
+		panic("Error loading .env file")
 	}
 
 	// Connect to the database
 	err = Connect()
 	if err != nil {
-		t.Error("Error connecting to the database")
-	}
-	_, err = GetApplications()
-	if err != nil {
-		t.Error(err)
+		panic("Error connecting to the database")
 	}
 }
