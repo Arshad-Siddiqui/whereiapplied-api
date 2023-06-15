@@ -48,3 +48,20 @@ func GetApplications() ([]byte, error) {
 
 	return jsonData, nil
 }
+
+func AddApplication(name string, link string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	result, err := client.Database("whereiapplied").Collection("applications").InsertOne(ctx, bson.M{
+		"name": name,
+		"link": link,
+	})
+	if err != nil {
+		return err
+	}
+
+	id := result.InsertedID
+	println(id)
+	return nil
+}
