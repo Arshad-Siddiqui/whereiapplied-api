@@ -9,12 +9,12 @@ import (
 
 func TestAddApplication(t *testing.T) {
 	// Load the .env file
-	err := godotenv.Load("./.env.test")
+	err := godotenv.Load("../.env.test")
 	if err != nil {
 		t.Error("Error loading .env file")
 	}
 
-	t.Log("MONGO_URI: ", os.Getenv("MONGO_URI:"))
+	t.Log(os.Getenv("MONGO_URI"), "<- MONGO URI")
 
 	// Connect to the database
 	err = Connect()
