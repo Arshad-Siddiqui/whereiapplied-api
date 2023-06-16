@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"testing"
 
 	"github.com/joho/godotenv"
@@ -46,5 +47,11 @@ func setup() {
 	err = Connect()
 	if err != nil {
 		panic("Error connecting to the database")
+	}
+
+	// Clear the database
+	err = client.Database("whereiapplied").Collection("applications").Drop(context.TODO())
+	if err != nil {
+		panic("Error clearing the database")
 	}
 }
