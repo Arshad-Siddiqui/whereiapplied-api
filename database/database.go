@@ -65,3 +65,16 @@ func AddApplication(name string, link string) error {
 	println(id)
 	return nil
 }
+
+func DeleteApplication(id string) (*mongo.DeleteResult, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	result, err := client.Database("whereiapplied").Collection("applications").DeleteOne(ctx, bson.M{
+		"_id": id,
+	})
+	if err != nil {
+		return result, err
+	}
+	return result, nil
+}
