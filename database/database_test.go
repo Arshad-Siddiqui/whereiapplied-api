@@ -22,9 +22,12 @@ func TestConnect(t *testing.T) {
 }
 func TestAddApplication(t *testing.T) {
 	setup()
-	err := AddApplication("Google", "https://google.com")
+	id, err := AddApplication("Google", "https://google.com")
 	if err != nil {
 		t.Error(err)
+	}
+	if id == nil {
+		t.Error("Expected id to be returned")
 	}
 }
 
@@ -35,6 +38,18 @@ func TestGetApplications(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+// func TestDeleteApplication(t *testing.T) {
+// 	setup()
+// 	err := AddApplication("Google", "https://google.com")
+// 	if err != nil {
+// 		t.Error(err)
+// 	}
+// 	result, err := DeleteApplication("1")
+// 	if err != nil {
+// 		t.Error(err)
+// 	}
+// }
 
 func setup() {
 	// Load the .env file

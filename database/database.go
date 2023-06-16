@@ -49,7 +49,7 @@ func GetApplications() ([]byte, error) {
 	return jsonData, nil
 }
 
-func AddApplication(name string, link string) error {
+func AddApplication(name string, link string) (interface{}, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -58,12 +58,11 @@ func AddApplication(name string, link string) error {
 		"link": link,
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	id := result.InsertedID
-	println(id)
-	return nil
+	return id, nil
 }
 
 func DeleteApplication(id string) (*mongo.DeleteResult, error) {
