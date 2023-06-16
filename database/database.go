@@ -76,3 +76,21 @@ func DeleteApplication(id string) (*mongo.DeleteResult, error) {
 	}
 	return result, nil
 }
+
+func UpdateApplication(id string, name string, link string) (*mongo.UpdateResult, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	result, err := client.Database("whereiapplied").Collection("applications").UpdateOne(ctx, bson.M{
+		"_id": id,
+	}, bson.M{
+		"$set": bson.M{
+			"name": name,
+			"link": link,
+		},
+	})
+	if err != nil {
+		return result, err
+	}
+	return result, nil
+}
