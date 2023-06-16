@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/joho/godotenv"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func TestConnect(t *testing.T) {
@@ -39,17 +40,26 @@ func TestGetApplications(t *testing.T) {
 	}
 }
 
-// func TestDeleteApplication(t *testing.T) {
-// 	setup()
-// 	err := AddApplication("Google", "https://google.com")
-// 	if err != nil {
-// 		t.Error(err)
-// 	}
-// 	result, err := DeleteApplication("1")
-// 	if err != nil {
-// 		t.Error(err)
-// 	}
-// }
+func TestDeleteApplication(t *testing.T) {
+	setup()
+	result, err := AddApplication("Google", "https://google.com")
+	if err != nil {
+		t.Error(err)
+	}
+	var id string
+	if result != nil {
+		id = result.InsertedID.(primitive.ObjectID).Hex()
+	} else {
+		t.Error("Expected id to be returned")
+	}
+	delResult, err := DeleteApplication(id)
+	if err != nil {
+		t.Error(err)
+	}
+	if delResult == nil {
+		t.Error("Expected id to be returned")
+	}
+}
 
 func setup() {
 	// Load the .env file
