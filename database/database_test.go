@@ -4,9 +4,8 @@ import (
 	"context"
 	"testing"
 
+	"github.com/Arshad-Siddiqui/whereiapplied-api/util"
 	"github.com/joho/godotenv"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func TestConnect(t *testing.T) {
@@ -49,7 +48,7 @@ func TestDeleteApplication(t *testing.T) {
 	}
 	var id string
 	if result != nil {
-		id = getId(result)
+		id = util.GetId(result)
 	} else {
 		t.Error("Expected id to be returned")
 	}
@@ -70,7 +69,7 @@ func TestUpdateApplication(t *testing.T) {
 	}
 	var id string
 	if result != nil {
-		id = getId(result)
+		id = util.GetId(result)
 	} else {
 		t.Error("Expected id to be returned")
 	}
@@ -103,8 +102,4 @@ func setup() {
 	if err != nil {
 		panic("Error clearing the database")
 	}
-}
-
-func getId(result *mongo.InsertOneResult) string {
-	return result.InsertedID.(primitive.ObjectID).Hex()
 }

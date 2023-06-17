@@ -21,6 +21,7 @@ func ListApplications(w http.ResponseWriter, r *http.Request) {
 	w.Write(applications)
 }
 
+// TODO: Fix this, currently doesn't update the database
 func AddApplication(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	if r.Method == "POST" {
