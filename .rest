@@ -1,0 +1,9 @@
+POST http://localhost:8080/applications/add
+Content-Type: application/json
+
+```
+{
+    "name": "test1",
+    "link": "test link"
+}
+```
