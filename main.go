@@ -8,6 +8,7 @@ import (
 	"github.com/Arshad-Siddiqui/whereiapplied-api/controller"
 	"github.com/Arshad-Siddiqui/whereiapplied-api/database"
 	"github.com/joho/godotenv"
+	"github.com/rs/cors"
 )
 
 func init() {
@@ -24,6 +25,7 @@ func init() {
 }
 
 func main() {
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/applications", controller.ListApplications)
 	mux.HandleFunc("/applications/add", controller.AddApplication)
@@ -32,10 +34,10 @@ func main() {
 		w.Write([]byte("Hello, World!"))
 	})
 	port := getPort()
-	corsMux := applyCORS(mux)
+	handler := cors.Default().Handler(mux)
 
 	log.Println("Listening on port", port)
-	log.Fatal(http.ListenAndServe(port, corsMux))
+	log.Fatal(http.ListenAndServe(port, handler))
 }
 
 func getPort() string {
@@ -44,22 +46,4 @@ func getPort() string {
 		port = "8080"
 	}
 	return ":" + port
-}
-
-func applyCORS(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Set CORS headers
-		w.Header().Set("Access-Control-Allow-Origin", "*")                   // Update with your allowed origins
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS") // Update with your allowed methods
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")       // Update with your allowed headers
-
-		// Handle preflight requests
-		if r.Method == "OPTIONS" {
-			w.WriteHeader(http.StatusOK)
-			return
-		}
-
-		// Call the next handler
-		next.ServeHTTP(w, r)
-	})
 }
