@@ -14,11 +14,13 @@ import (
 var client *mongo.Client
 
 func Connect() error {
-	ctx := context.TODO()
-	var err error
-	client, err = mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("MONGO_URI")))
-	if err != nil {
-		return err
+	if client == nil {
+		ctx := context.TODO()
+		var err error
+		client, err = mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("MONGO_URI")))
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -26,6 +28,8 @@ func Connect() error {
 func GetApplications() ([]byte, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
+	Connect()
+
 	cursor, err := client.Database("whereiapplied").Collection("applications").Find(ctx, bson.M{})
 	if err != nil {
 		return nil, err
@@ -52,7 +56,7 @@ func GetApplications() ([]byte, error) {
 func AddApplication(name string, link string) (*mongo.InsertOneResult, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-
+	Connect()
 	result, err := client.Database("whereiapplied").Collection("applications").InsertOne(ctx, bson.M{
 		"name": name,
 		"link": link,
