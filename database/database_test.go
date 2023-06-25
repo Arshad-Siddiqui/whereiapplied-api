@@ -23,7 +23,7 @@ func TestConnect(t *testing.T) {
 }
 func TestAddApplication(t *testing.T) {
 	setup()
-	id, err := AddApplication("Google", "https://google.com")
+	id, err := AddApplication("Google", true, "Pending", "2020-01-01", "https://google.com")
 	if err != nil {
 		t.Error(err)
 	}
@@ -42,7 +42,7 @@ func TestGetApplications(t *testing.T) {
 
 func TestDeleteApplication(t *testing.T) {
 	setup()
-	result, err := AddApplication("Google", "https://google.com")
+	result, err := AddApplication("Google", true, "Pending", "2020-01-01", "https://google.com")
 	if err != nil {
 		t.Error(err)
 	}
@@ -63,7 +63,7 @@ func TestDeleteApplication(t *testing.T) {
 
 func TestUpdateApplication(t *testing.T) {
 	setup()
-	result, err := AddApplication("Google", "https://google.com")
+	result, err := AddApplication("Google", true, "Pending", "2020-01-01", "https://google.com")
 	if err != nil {
 		t.Error(err)
 	}

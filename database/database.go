@@ -53,13 +53,15 @@ func GetApplications() ([]byte, error) {
 	return jsonData, nil
 }
 
-func AddApplication(name string, link string) (*mongo.InsertOneResult, error) {
+func AddApplication(name string, applied bool, status string, date string, website string) (*mongo.InsertOneResult, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	Connect()
 	result, err := client.Database("whereiapplied").Collection("applications").InsertOne(ctx, bson.M{
-		"name": name,
-		"link": link,
+		"name":    name,
+		"applied": applied,
+		"status":  status,
+		"date":    date,
+		"website": website,
 	})
 	if err != nil {
 		return nil, err

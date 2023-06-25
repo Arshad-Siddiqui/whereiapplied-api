@@ -1,9 +1,19 @@
 POST http://localhost:8080/applications/add
 Content-Type: application/json
+method: POST
 
 ```
 {
-    "name": "test1",
-    "link": "test link"
+    "name": "google",
+    "applied": true,
+    "status": "Pending",
+    "date": "2021-01-01",
+    "website": "www.google.com"
 }
 ```
+
+###
+
+GET http://localhost:8080/applications
+
+###
