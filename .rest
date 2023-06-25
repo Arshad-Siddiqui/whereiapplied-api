@@ -2,7 +2,6 @@ POST http://localhost:8080/applications/add
 Content-Type: application/json
 method: POST
 
-```
 {
     "name": "google",
     "applied": true,
@@ -10,10 +9,7 @@ method: POST
     "date": "2021-01-01",
     "website": "www.google.com"
 }
-```
 
 ###
 
 GET http://localhost:8080/applications
-
-###
