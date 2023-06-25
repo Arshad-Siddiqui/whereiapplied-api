@@ -21,9 +21,18 @@ func TestConnect(t *testing.T) {
 		t.Error("Error connecting to the database")
 	}
 }
+
+var google = Application{
+	Name:    "Google",
+	Applied: true,
+	Status:  "Pending",
+	Date:    "2020-01-01",
+	Website: "https://google.com",
+}
+
 func TestAddApplication(t *testing.T) {
 	setup()
-	id, err := AddApplication("Google", true, "Pending", "2020-01-01", "https://google.com")
+	id, err := AddApplication(google)
 	if err != nil {
 		t.Error(err)
 	}
@@ -42,7 +51,7 @@ func TestGetApplications(t *testing.T) {
 
 func TestDeleteApplication(t *testing.T) {
 	setup()
-	result, err := AddApplication("Google", true, "Pending", "2020-01-01", "https://google.com")
+	result, err := AddApplication(google)
 	if err != nil {
 		t.Error(err)
 	}
@@ -63,7 +72,7 @@ func TestDeleteApplication(t *testing.T) {
 
 func TestUpdateApplication(t *testing.T) {
 	setup()
-	result, err := AddApplication("Google", true, "Pending", "2020-01-01", "https://google.com")
+	result, err := AddApplication(google)
 	if err != nil {
 		t.Error(err)
 	}

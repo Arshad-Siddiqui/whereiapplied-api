@@ -13,6 +13,14 @@ import (
 
 var client *mongo.Client
 
+type Application struct {
+	Name    string `json:"name"`
+	Applied bool   `json:"applied"`
+	Status  string `json:"status"`
+	Date    string `json:"date"`
+	Website string `json:"website"`
+}
+
 func Connect() error {
 	if client == nil {
 		ctx := context.TODO()
@@ -53,15 +61,15 @@ func GetApplications() ([]byte, error) {
 	return jsonData, nil
 }
 
-func AddApplication(name string, applied bool, status string, date string, website string) (*mongo.InsertOneResult, error) {
+func AddApplication(app Application) (*mongo.InsertOneResult, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	result, err := client.Database("whereiapplied").Collection("applications").InsertOne(ctx, bson.M{
-		"name":    name,
-		"applied": applied,
-		"status":  status,
-		"date":    date,
-		"website": website,
+		"name":    app.Name,
+		"applied": app.Applied,
+		"status":  app.Status,
+		"date":    app.Date,
+		"website": app.Website,
 	})
 	if err != nil {
 		return nil, err
