@@ -13,3 +13,20 @@ method: POST
 ###
 
 GET http://localhost:8080/applications
+
+###
+
+POST http://localhost:8080/users/add
+Content-Type: application/json
+method: POST
+
+{
+   "email": "testEmail",
+   "password": "testPassword" 
+}
+
+###
+
+POST http://localhost:8080/users/add
+Content-Type: application/json
+method: POST
