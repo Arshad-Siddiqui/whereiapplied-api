@@ -1,28 +1,26 @@
 package auth_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/Arshad-Siddiqui/whereiapplied-api/auth"
-	"github.com/golang-jwt/jwt/v5"
 )
 
-func TestValidateJWT(t *testing.T) {
-	id := "12345"
-	tokenStr, err := auth.CreateJWT(id)
-	if err != nil {
-		t.Error("Error signing with key")
-	}
+func TestGetClaims(t *testing.T) {
+	idArr := []string{"12345", "helloworld", "fooBar"}
 
-	token, err := auth.ValidateJWT(tokenStr)
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok {
-		t.Error("claims not ok")
-	}
+	for _, id := range idArr {
+		tokenStr, err := auth.CreateJWT(id)
+		if err != nil {
+			t.Error(err, "Error signing with key")
+		}
 
-	if claims["id"] != id {
-		t.Error("Id is different")
+		claims, err := auth.GetClaims(tokenStr)
+		if err != nil {
+			t.Error(err, "Error generating claims")
+		}
+		if claims["id"] != id {
+			t.Error("Id is different")
+		}
 	}
-	fmt.Println(claims["id"])
 }
