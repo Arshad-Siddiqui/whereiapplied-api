@@ -27,3 +27,7 @@ MONGO_URI=<your_mongoDB_Atlas_uri_with_credentials>
 ```
 
 > For tests create .env.test and put in the same MONGO_URI but with a local database.
+
+## What I was doing
+
+- Making a middleware that allows you to authenticate with JWT.
