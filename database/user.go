@@ -66,3 +66,17 @@ func CheckUserExists(email string) bool {
 	err := collection.FindOne(ctx, filter).Decode(&user)
 	return err == nil
 }
+
+func CheckLogin(possibleUser User) (User, error) {
+	ctx, cancel := util.DbContext()
+	defer cancel()
+
+	db := client.Database("whereiapplied")
+	collection := db.Collection("users")
+
+	filter := bson.M{"email": possibleUser.Email, "password": possibleUser.Password}
+
+	var user User
+	err := collection.FindOne(ctx, filter).Decode(&user)
+	return user, err
+}
