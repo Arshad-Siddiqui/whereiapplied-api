@@ -71,13 +71,13 @@ func TestCheckUserExists(t *testing.T) {
 			t.Error(err)
 		}
 
-		userExists := checkUserExists(user.Email)
+		userExists := CheckUserExists(user.Email)
 		if !userExists {
 			t.Log("User should exist but doesn't")
 		}
 	}
 
-	userExists := checkUserExists("nonexistentemail")
+	userExists := CheckUserExists("nonexistentemail")
 	if userExists {
 		t.Log("User should not exist but does")
 	}
