@@ -5,10 +5,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/Arshad-Siddiqui/whereiapplied-api/controller"
 	"github.com/Arshad-Siddiqui/whereiapplied-api/database"
+	"github.com/Arshad-Siddiqui/whereiapplied-api/router"
 	"github.com/joho/godotenv"
-	"github.com/rs/cors"
 )
 
 func init() {
@@ -25,17 +24,8 @@ func init() {
 }
 
 func main() {
-
-	mux := http.NewServeMux()
-	mux.HandleFunc("/applications", controller.ListApplications)
-	mux.HandleFunc("/applications/add", controller.AddApplication)
-	mux.HandleFunc("/users/add", controller.AddUser)
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("Hello, World!"))
-	})
+	handler := router.New()
 	port := getPort()
-	handler := cors.Default().Handler(mux)
 
 	log.Println("Listening on port", port)
 	log.Fatal(http.ListenAndServe(port, handler))
