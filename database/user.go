@@ -1,6 +1,8 @@
 package database
 
 import (
+	"errors"
+
 	"github.com/Arshad-Siddiqui/whereiapplied-api/util"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -16,6 +18,11 @@ type User struct {
 func AddUser(user User) (*mongo.InsertOneResult, error) {
 	ctx, cancel := util.DbContext()
 	defer cancel()
+
+	// TODO: Check if this even works
+	if checkUserExists(user.Email) {
+		return nil, errors.New("user already exists")
+	}
 
 	result, err := client.Database("whereiapplied").Collection("users").InsertOne(ctx, user)
 	if err != nil {
