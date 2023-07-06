@@ -25,7 +25,6 @@ func AddUser(user User) (*mongo.InsertOneResult, error) {
 }
 
 func FindUser(id string) (User, error) {
-	// Queries the DB and then returns the ID and maybe an error.
 	ctx, cancel := util.DbContext()
 	defer cancel()
 
@@ -45,4 +44,18 @@ func FindUser(id string) (User, error) {
 		return User{}, err
 	}
 	return user, err
+}
+
+func checkUserExists(email string) bool {
+	ctx, cancel := util.DbContext()
+	defer cancel()
+
+	db := client.Database("whereiapplied")
+	collection := db.Collection("users")
+
+	filter := bson.M{"email": email}
+
+	var user User
+	err := collection.FindOne(ctx, filter).Decode(&user)
+	return err == nil
 }

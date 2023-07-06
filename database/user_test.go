@@ -50,3 +50,35 @@ func TestFindUser(t *testing.T) {
 		t.Log("Epic fail. Users are not the same.")
 	}
 }
+
+func TestCheckUserExists(t *testing.T) {
+	users := []User{
+		{
+			Email:    "testemail",
+			Password: "testpassword",
+		},
+		{
+			Email:    "testemail2",
+			Password: "testpassword2",
+		},
+	}
+
+	for _, user := range users {
+		setup()
+
+		_, err := AddUser(user)
+		if err != nil {
+			t.Error(err)
+		}
+
+		userExists := checkUserExists(user.Email)
+		if !userExists {
+			t.Log("User should exist but doesn't")
+		}
+	}
+
+	userExists := checkUserExists("nonexistentemail")
+	if userExists {
+		t.Log("User should not exist but does")
+	}
+}
