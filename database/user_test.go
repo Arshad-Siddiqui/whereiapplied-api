@@ -82,3 +82,27 @@ func TestCheckUserExists(t *testing.T) {
 		t.Log("User should not exist but does")
 	}
 }
+
+func TestCheckLogin(t *testing.T) {
+	setup()
+	user := User{
+		Email:    "testemail",
+		Password: "testpassword",
+	}
+	result, err := AddUser(user)
+	if err != nil {
+		t.Error(err)
+	}
+	if result == nil {
+		t.Error("Expected result to be returned")
+	}
+
+	userFromDb, err := CheckLogin(user)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if userFromDb.Email != user.Email || userFromDb.Password != user.Password {
+		t.Log("Epic fail. Users are not the same.")
+	}
+}
