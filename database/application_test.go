@@ -106,8 +106,12 @@ func setup() {
 		panic("Error connecting to the database")
 	}
 
-	// Clear the database
-	err = client.Database("whereiapplied").Collection("applications").Drop(context.TODO())
+	clearDB("applications")
+	clearDB("users")
+}
+
+func clearDB(collection string) {
+	err := client.Database("whereiapplied").Collection(collection).Drop(context.TODO())
 	if err != nil {
 		panic("Error clearing the database")
 	}
