@@ -105,4 +105,14 @@ func TestCheckLogin(t *testing.T) {
 	if userFromDb.Email != user.Email || userFromDb.Password != user.Password {
 		t.Log("Epic fail. Users are not the same.")
 	}
+
+	user2 := User{
+		Email:    "testemail2",
+		Password: "testpassword2",
+	}
+
+	_, err = CheckLogin(user2)
+	if err == nil {
+		t.Log("User should not exist but does")
+	}
 }
