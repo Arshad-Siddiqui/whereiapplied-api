@@ -6,7 +6,7 @@ import (
 
 	"github.com/Arshad-Siddiqui/whereiapplied-api/auth"
 	"github.com/Arshad-Siddiqui/whereiapplied-api/database"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"github.com/Arshad-Siddiqui/whereiapplied-api/util"
 )
 
 func AddUser(w http.ResponseWriter, r *http.Request) {
@@ -21,7 +21,7 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	if handleInternalServerError(w, &err) != nil {
 		return
 	}
-	id := result.InsertedID.(primitive.ObjectID).Hex()
+	id := util.GetId(result)
 	w.Write([]byte(id))
 }
 
