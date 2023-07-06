@@ -20,7 +20,7 @@ func AddUser(user User) (*mongo.InsertOneResult, error) {
 	defer cancel()
 
 	// TODO: Check if this even works
-	if checkUserExists(user.Email) {
+	if CheckUserExists(user.Email) {
 		return nil, errors.New("user already exists")
 	}
 
@@ -53,7 +53,7 @@ func FindUser(id string) (User, error) {
 	return user, err
 }
 
-func checkUserExists(email string) bool {
+func CheckUserExists(email string) bool {
 	ctx, cancel := util.DbContext()
 	defer cancel()
 
