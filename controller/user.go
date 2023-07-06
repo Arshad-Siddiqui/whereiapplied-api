@@ -13,15 +13,12 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var user database.User
 	err := json.NewDecoder(r.Body).Decode(&user)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(err.Error()))
+	if handleStatusBadRequest(w, &err) != nil {
 		return
 	}
+
 	result, err := database.AddUser(user)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
+	if handleInternalServerError(w, &err) != nil {
 		return
 	}
 	id := result.InsertedID.(primitive.ObjectID).Hex()
@@ -32,25 +29,37 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var user database.User
 	err := json.NewDecoder(r.Body).Decode(&user)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(err.Error()))
+	if handleStatusBadRequest(w, &err) != nil {
 		return
 	}
+
 	user, err = database.CheckLogin(user)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
+	if handleInternalServerError(w, &err) != nil {
 		return
 	}
+
 	jwt, err := auth.CreateJWT(user.ID)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
+	if handleInternalServerError(w, &err) != nil {
 		return
 	}
 
 	w.Write([]byte(jwt))
 }
 
-// TODO: Write some controller utility functions
+func handleInternalServerError(w http.ResponseWriter, err *error) error {
+	if *err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte((*err).Error()))
+		return *err
+	}
+	return nil
+}
+
+func handleStatusBadRequest(w http.ResponseWriter, err *error) error {
+	if *err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte((*err).Error()))
+		return *err
+	}
+	return nil
+}
