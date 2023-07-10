@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"os"
-	"time"
 
+	"github.com/Arshad-Siddiqui/whereiapplied-api/util"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -34,7 +34,7 @@ func Connect() error {
 }
 
 func GetApplications() ([]byte, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := util.GeneralContext()
 	defer cancel()
 	Connect()
 
@@ -62,7 +62,7 @@ func GetApplications() ([]byte, error) {
 }
 
 func AddApplication(app Application) (*mongo.InsertOneResult, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := util.GeneralContext()
 	defer cancel()
 	result, err := client.Database("whereiapplied").Collection("applications").InsertOne(ctx, bson.M{
 		"name":    app.Name,
@@ -79,7 +79,7 @@ func AddApplication(app Application) (*mongo.InsertOneResult, error) {
 }
 
 func DeleteApplication(id string) (*mongo.DeleteResult, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := util.GeneralContext()
 	defer cancel()
 
 	result, err := client.Database("whereiapplied").Collection("applications").DeleteOne(ctx, bson.M{
@@ -92,7 +92,7 @@ func DeleteApplication(id string) (*mongo.DeleteResult, error) {
 }
 
 func UpdateApplication(id string, name string, link string) (*mongo.UpdateResult, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := util.GeneralContext()
 	defer cancel()
 
 	result, err := client.Database("whereiapplied").Collection("applications").UpdateOne(ctx, bson.M{

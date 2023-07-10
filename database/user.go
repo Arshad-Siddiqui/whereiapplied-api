@@ -16,7 +16,7 @@ type User struct {
 }
 
 func AddUser(user User) (*mongo.InsertOneResult, error) {
-	ctx, cancel := util.DbContext()
+	ctx, cancel := util.GeneralContext()
 	defer cancel()
 
 	// TODO: Check if this even works
@@ -32,7 +32,7 @@ func AddUser(user User) (*mongo.InsertOneResult, error) {
 }
 
 func FindUser(id string) (User, error) {
-	ctx, cancel := util.DbContext()
+	ctx, cancel := util.GeneralContext()
 	defer cancel()
 
 	db := client.Database("whereiapplied")
@@ -54,7 +54,7 @@ func FindUser(id string) (User, error) {
 }
 
 func CheckUserExists(email string) bool {
-	ctx, cancel := util.DbContext()
+	ctx, cancel := util.GeneralContext()
 	defer cancel()
 
 	db := client.Database("whereiapplied")
@@ -68,7 +68,7 @@ func CheckUserExists(email string) bool {
 }
 
 func CheckLogin(possibleUser User) (User, error) {
-	ctx, cancel := util.DbContext()
+	ctx, cancel := util.GeneralContext()
 	defer cancel()
 
 	db := client.Database("whereiapplied")
