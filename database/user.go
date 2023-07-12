@@ -62,9 +62,8 @@ func CheckUserExists(email string) bool {
 
 	filter := bson.M{"email": email}
 
-	var user User
-	err := collection.FindOne(ctx, filter).Decode(&user)
-	return err == nil
+	result := collection.FindOne(ctx, filter)
+	return result.Err() == nil
 }
 
 func CheckLogin(possibleUser User) (User, error) {
