@@ -9,20 +9,28 @@ import (
 
 func New() http.Handler {
 	mux := http.NewServeMux()
+	mux.Handle("/applications/", http.StripPrefix("/applications", appsMux()))
+	mux.Handle("/users/", http.StripPrefix("/users", usersMux()))
 
-	appsMux := http.NewServeMux()
-	usersMux := http.NewServeMux()
-	appsMux.HandleFunc("/", controller.ListApplications)
-	appsMux.HandleFunc("/add", controller.AddApplication)
-	usersMux.HandleFunc("/users/signup", controller.SignUp)
-	usersMux.HandleFunc("/users/login", controller.Login)
-
-	mux.Handle("/applications/", http.StripPrefix("/applications", appsMux))
-	mux.Handle("/users/", http.StripPrefix("/users", usersMux))
-
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("Hello, World!"))
-	})
+	mux.HandleFunc("/", index)
 	return cors.Default().Handler(mux)
+}
+
+func appsMux() *http.ServeMux {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", controller.ListApplications)
+	mux.HandleFunc("/add", controller.AddApplication)
+	return mux
+}
+
+func usersMux() *http.ServeMux {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/signup", controller.SignUp)
+	mux.HandleFunc("/login", controller.Login)
+	return mux
+}
+
+func index(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Hello, World!"))
 }
