@@ -9,7 +9,7 @@ import (
 	"github.com/Arshad-Siddiqui/whereiapplied-api/util"
 )
 
-func AddUser(w http.ResponseWriter, r *http.Request) {
+func SignUp(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var user database.User
 	err := json.NewDecoder(r.Body).Decode(&user)

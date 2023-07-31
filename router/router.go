@@ -9,10 +9,17 @@ import (
 
 func New() http.Handler {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/applications", controller.ListApplications)
-	mux.HandleFunc("/applications/add", controller.AddApplication)
-	mux.HandleFunc("/users/add", controller.AddUser)
-	mux.HandleFunc("/users/login", controller.Login)
+
+	appsMux := http.NewServeMux()
+	usersMux := http.NewServeMux()
+	appsMux.HandleFunc("/", controller.ListApplications)
+	appsMux.HandleFunc("/add", controller.AddApplication)
+	usersMux.HandleFunc("/users/signup", controller.SignUp)
+	usersMux.HandleFunc("/users/login", controller.Login)
+
+	mux.Handle("/applications/", http.StripPrefix("/applications", appsMux))
+	mux.Handle("/users/", http.StripPrefix("/users", usersMux))
+
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Hello, World!"))
