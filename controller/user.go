@@ -44,5 +44,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write([]byte(jwt))
+	type response struct {
+		JWT string `json:"jwt"`
+	}
+
+	res := response{jwt}
+	json.NewEncoder(w).Encode(res)
 }
