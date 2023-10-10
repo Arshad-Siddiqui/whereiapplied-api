@@ -108,3 +108,14 @@ func UpdateApplication(id string, name string, link string) (*mongo.UpdateResult
 	}
 	return result, nil
 }
+
+func GetAppCount() (int64, error) {
+	ctx, cancel := util.GeneralContext()
+	defer cancel()
+
+	count, err := client.Database("whereiapplied").Collection("applications").CountDocuments(ctx, bson.M{})
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}

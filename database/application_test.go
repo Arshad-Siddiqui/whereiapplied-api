@@ -30,6 +30,22 @@ var google = Application{
 	Website: "https://google.com",
 }
 
+var microsoft = Application{
+	Name:    "Microsoft",
+	Applied: true,
+	Status:  "Pending",
+	Date:    "2020-01-01",
+	Website: "https://microsoft.com",
+}
+
+var facebook = Application{
+	Name:    "Facebook",
+	Applied: true,
+	Status:  "Pending",
+	Date:    "2020-01-01",
+	Website: "https://facebook.com",
+}
+
 func TestAddApplication(t *testing.T) {
 	setup()
 	id, err := AddApplication(google)
@@ -88,6 +104,50 @@ func TestUpdateApplication(t *testing.T) {
 	}
 	if updateResult == nil {
 		t.Error("Expected id to be returned")
+	}
+}
+
+func TestGetAppCount(t *testing.T) {
+	setup()
+	num, err := GetAppCount()
+	if err != nil {
+		t.Error(err)
+	}
+
+	if num != 0 {
+		t.Error("Expected 0 applications")
+	}
+
+	_, err = AddApplication(google)
+	if err != nil {
+		t.Error(err)
+	}
+
+	num2, err := GetAppCount()
+	if err != nil {
+		t.Error(err)
+	}
+
+	if num2 != 1 {
+		t.Error("Expected 1 application")
+	}
+
+	_, err = AddApplication(microsoft)
+	if err != nil {
+		t.Error(err)
+	}
+	_, err = AddApplication(facebook)
+	if err != nil {
+		t.Error(err)
+	}
+
+	num3, err := GetAppCount()
+	if err != nil {
+		t.Error(err)
+	}
+
+	if num3 != 3 {
+		t.Error("Expected 3 applications")
 	}
 }
 
